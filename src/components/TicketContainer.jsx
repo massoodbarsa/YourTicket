@@ -7,12 +7,12 @@ export default function TicketContainer() {
 
     const context = useContext(TicketContext)
 
-
+console.log(context.tickets);
     const [tickets, setTicket] = useState(context.tickets)
 
     const ticket = tickets.map((item, index) => {
         return (
-            <div>
+            <div className='ticket-container'>
                 <Ticket ticket={item} />
             </div>
         )
