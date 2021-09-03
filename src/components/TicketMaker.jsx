@@ -19,11 +19,10 @@ export default function TicketMaker() {
     const [snackbar, setSnackbar] = useState(false)
 
     const handleAddTicket = () => {
-        if (ticketName.length === 0 || ticketText.length === 0 || ticketText.length === 0 || ticketStartOfSales.length === 0 || ticketEndOfSales.length === 0 || setTicketAvailable.length === 0) {
+        if (ticketName.length === 0 || ticketText.length === 0 || ticketText.length === 0 || ticketStartOfSales.length === 0 || ticketEndOfSales.length === 0 || ticketAvailable.length === 0) {
             setSnackbar(true)
             return
         }
-        console.log(ticketName.length);
 
         const ticketObj = {
             id: Uuid(),
@@ -35,9 +34,8 @@ export default function TicketMaker() {
             endOfSales: ticketEndOfSales,
             image: ticketImage
         }
-        // console.log(ticketObj);
+
         context.addItem(ticketObj)
-        // setEdit(true)
     }
 
     const handleCloseSnackbar = (event, reason) => {

@@ -42,7 +42,6 @@ export default function Ticket({ ticket }) {
     const handleSave = () => {
         if (ticketName.length === 0 || ticketText.length === 0) {
             setSnackbar(true)
-            console.log('ridei dadach');
             return
         }
         const ticketObj = {
