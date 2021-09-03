@@ -25,6 +25,7 @@ export default function Ticket({ ticket }) {
     const [ticketStartOfSales, setTicketStartOfSales] = useState(startOfSales)
     const [ticketEndOfSales, setTicketEndOfSales] = useState(endOfSales)
     const [ticketAvailable, setTicketAvailable] = useState(totalAvailable)
+    const [ticketImage, setTicketImage] = useState(image)
 
     const [edit, setEdit] = useState(true)
     const [snackbar, setSnackbar] = useState(false)
@@ -52,7 +53,7 @@ export default function Ticket({ ticket }) {
             totalAvailable: ticketAvailable,
             startOfSales: ticketStartOfSales,
             endOfSales: ticketEndOfSales,
-            // image:"https://www.rollingstone.com/wp-content/uploads/2010/12/BeatlesMainW.jpg",
+            image:ticketImage,
         }
         // console.log(ticketObj);
         context.updateItem(ticketObj)

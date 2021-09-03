@@ -6,10 +6,15 @@
     height:100vh ;
 
     &__left{
-        background-color: red;
+        padding: 30px;
+        border-right: 2px solid rgb(175, 170, 170);
+        // background-color: red;
        
     }
     &__right{
+
+        padding: 30px;
+
         
     }
 
