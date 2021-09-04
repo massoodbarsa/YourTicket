@@ -1,3 +1,2 @@
 # YourTicket
-
-hi
+npm i & npm start
