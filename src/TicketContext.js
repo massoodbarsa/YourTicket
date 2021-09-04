@@ -19,25 +19,27 @@ export default class TicketContextProvider extends Component {
     }
 
     deleteItem = (id) => {
-        const filterdArray = this.state.tickets.filter(item => item.id !== id)
-        localStorage.removeItem('tickets')
-        localStorage.setItem('tickets', JSON.stringify(filterdArray))
 
+        console.log(id);
+        const filterdArray = this.state.tickets.filter(item => item.id !== id)
         this.setState({
             tickets: filterdArray
         })
+        console.log(filterdArray);
+        localStorage.removeItem('tickets')
+        localStorage.setItem('tickets', JSON.stringify(filterdArray))
     }
 
     addItem = (ticketObj) => {
-        const localData = localStorage.getItem('tickets')
-        const localDataParse = localData !== null ? JSON.parse(localData) : []
-
-        localDataParse.push(ticketObj)
-        localStorage.setItem('tickets', JSON.stringify(localDataParse))
 
         this.setState({
             tickets: [...this.state.tickets, ticketObj]
         })
+
+        const localData = localStorage.getItem('tickets')
+        const localDataParse = localData !== null ? JSON.parse(localData) : []
+        localDataParse.push(ticketObj)
+        localStorage.setItem('tickets', JSON.stringify(localDataParse))
     }
 
     updateItem = (ticket) => {
@@ -45,18 +47,28 @@ export default class TicketContextProvider extends Component {
         const filterdArray = this.state.tickets.filter(item => item.id !== ticket.id)
         const newState = [...filterdArray, ticket]
 
-        localStorage.removeItem('tickets')
-        localStorage.setItem('tickets', JSON.stringify(newState))
-
         this.setState({
             tickets: newState
         })
+
+        localStorage.removeItem('tickets')
+        localStorage.setItem('tickets', JSON.stringify(newState))
+    }
+
+    changeOrder=(newArray)=>{
+
+        console.log(newArray);
+        this.setState({
+            tickets: newArray
+        })
+
     }
 
     valueObj = {
         addItem: this.addItem,
         deleteItem: this.deleteItem,
         updateItem: this.updateItem,
+        changeOrder:this.changeOrder
     }
 
     render() {

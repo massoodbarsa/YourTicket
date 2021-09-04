@@ -1,18 +1,22 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useRef } from 'react'
 import { TicketContext } from '../TicketContext'
-
-
 import { makeStyles } from '@material-ui/core/styles';
 import { Card, FormControl, CardActions, CardContent, CardMedia, Button, Input, Snackbar, InputLabel } from '@material-ui/core/';
+import { useDrag, useDrop } from 'react-dnd';
+
 
 const useStyles = makeStyles({
     root: {
-        maxWidth: 345,
+        width: 300,
+        backgroundColor: '#f4f4f4',
+        maxHeight: 600,
+        overflow: 'scroll',
+        marginBottom: 50,
     },
 
 })
 
-export default function Ticket({ ticket }) {
+export default function Ticket({ ticket, ticketId, moveTicket, index }) {
     const context = useContext(TicketContext)
 
     const classes = useStyles();
@@ -29,6 +33,58 @@ export default function Ticket({ ticket }) {
 
     const [edit, setEdit] = useState(true)
     const [snackbar, setSnackbar] = useState(false)
+
+    ///drag
+    const [{ isDragging }, drag] = useDrag({
+        type: 'ticket',
+        item: () => {
+            return { ticketId, index };
+        },
+        collect: (monitor) => ({
+            isDragging: monitor.isDragging(),
+        }),
+    });
+
+
+    ///drop
+    const ref = useRef(null);
+
+    const [{ handlerId }, drop] = useDrop({
+        accept: 'ticket',
+        collect(monitor) {
+            return {
+                handlerId: monitor.getHandlerId(),
+            };
+        },
+        hover(item, monitor) {
+            if (!ref.current) {
+                return;
+            }
+            const dragIndex = item.index;
+            const hoverIndex = index;
+            // Don't replace items with themselves
+            if (dragIndex === hoverIndex) {
+                return;
+            }
+            // Determine rectangle on screen
+            const hoverBoundingRect = ref.current?.getBoundingClientRect();
+            // Get vertical middle
+            const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+            // Determine mouse position
+            const clientOffset = monitor.getClientOffset();
+            // Get pixels to the top
+            const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+        
+            if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+                return;
+            }
+            moveTicket(dragIndex, hoverIndex);
+
+            item.index = hoverIndex;
+        },
+    });
+
+    drag(drop(ref));
 
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
@@ -52,13 +108,12 @@ export default function Ticket({ ticket }) {
             totalAvailable: ticketAvailable,
             startOfSales: ticketStartOfSales,
             endOfSales: ticketEndOfSales,
-            image:ticketImage,
+            image: ticketImage,
         }
         // console.log(ticketObj);
         context.updateItem(ticketObj)
         setEdit(true)
     }
-
 
     const handleDelete = () => {
         context.deleteItem(id)
@@ -66,7 +121,7 @@ export default function Ticket({ ticket }) {
 
     return (
         <div >
-            <Card className={classes.root}>
+            <Card className={classes.root} ref={ref} style={{ boxShadow: isDragging ? '1px 5px 5px steelblue' : '0 0' }}>
 
                 <CardMedia
                     component="img"

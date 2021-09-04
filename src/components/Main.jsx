@@ -3,6 +3,9 @@ import TicketContainer from './TicketContainer'
 import TicketMaker from './TicketMaker'
 import './Main.scss'
 
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
+
 
 export default function main() {
     return (
@@ -11,7 +14,9 @@ export default function main() {
                 <TicketMaker />
             </section>
             <section className='main__right'>
-                <TicketContainer />
+                <DndProvider backend={HTML5Backend}>
+                    <TicketContainer />
+                </DndProvider>
             </section>
         </div>
     )

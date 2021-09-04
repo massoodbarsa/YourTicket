@@ -1,8 +1,9 @@
 import React, { useContext, useState } from 'react'
 import { TicketContext } from '../TicketContext'
 import Uuid from 'react-uuid';
+import './TicketMaker.scss'
 
-import { Card, FormControl, CardActions, CardContent, CardMedia, Button, Input, Snackbar, InputLabel } from '@material-ui/core/';
+import { FormControl, Button, Input, Snackbar, InputLabel, TextField } from '@material-ui/core/';
 
 export default function TicketMaker() {
 
@@ -17,10 +18,26 @@ export default function TicketMaker() {
     const [ticketImage, setTicketImage] = useState('')
 
     const [snackbar, setSnackbar] = useState(false)
+    const [errorMessage, setErrorMessage] = useState()
 
     const handleAddTicket = () => {
-        if (ticketName.length === 0 || ticketText.length === 0 || ticketText.length === 0 || ticketStartOfSales.length === 0 || ticketEndOfSales.length === 0 || ticketAvailable.length === 0) {
+        if (ticketName.length === 0 || ticketText.length === 0 || ticketPrice.length === 0 || ticketStartOfSales.length === 0 || ticketEndOfSales.length === 0 || ticketAvailable.length === 0) {
             setSnackbar(true)
+            setErrorMessage('No filed should be empty')
+
+            return
+        }
+
+        if ((Date.parse(ticketEndOfSales) <= Date.parse(ticketStartOfSales))) {
+            setSnackbar(true)
+            setErrorMessage('Start date has to be earlier than End date')
+
+            return
+        }
+
+        if (isNaN(Number(ticketAvailable))|| isNaN (Number(ticketPrice))) {
+            setSnackbar(true)
+            setErrorMessage('Available tickets or Price should be a number')
             return
         }
 
@@ -50,18 +67,13 @@ export default function TicketMaker() {
             <FormControl fullWidth='true' margin='normal' >
                 <InputLabel htmlFor="component-simple" required>Name</InputLabel>
                 <Input
-                    id="component-simple"
-
                     onChange={e => setTicketName(e.target.value)}
-
                 />
             </FormControl>
 
             <FormControl fullWidth='true' margin='normal'>
                 <InputLabel htmlFor="component-simple" >Desc</InputLabel>
                 <Input
-                    id="component-simple"
-
                     multiline
                     onChange={e => setTicketText(e.target.value)}
                     required
@@ -71,42 +83,40 @@ export default function TicketMaker() {
             <FormControl fullWidth='true' margin='normal'>
                 <InputLabel htmlFor="component-simple">Price</InputLabel>
                 <Input
-                    id="component-simple"
-
                     onChange={e => setTicketPrice(e.target.value)}
                     required
                 />
             </FormControl>
 
             <FormControl fullWidth='true' margin='normal'>
-                <InputLabel htmlFor="component-simple">Start of sales</InputLabel>
-                <Input
-                    id="component-simple"
-
-                    onChange={e => setTicketStartOfSales(e.target.value)}
-                    required
+                {/* <InputLabel htmlFor="component-simple">Start of sales</InputLabel> */}
+                <TextField
+                    id="date"
+                    label="Start of sales"
                     type="date"
+                    onChange={e => setTicketStartOfSales(e.target.value)}
 
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
                 />
             </FormControl>
 
             <FormControl fullWidth='true' margin='normal'>
-                <InputLabel htmlFor="component-simple">End of sales</InputLabel>
-                <Input
-                    id="component-simple"
-
-                    onChange={e => setTicketEndOfSales(e.target.value)}
-                    required
+                <TextField
+                    id="date"
+                    label="End of sales"
                     type="date"
-
+                    onChange={e => setTicketEndOfSales(e.target.value)}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
                 />
             </FormControl>
 
             <FormControl fullWidth='true' margin='normal'>
                 <InputLabel htmlFor="component-simple">Available tickets</InputLabel>
                 <Input
-                    id="component-simple"
-
                     onChange={e => setTicketAvailable(e.target.value)}
                     required
                 />
@@ -115,8 +125,6 @@ export default function TicketMaker() {
             <FormControl fullWidth='true' margin='normal'>
                 <InputLabel htmlFor="component-simple">URL</InputLabel>
                 <Input
-                    id="component-simple"
-
                     onChange={e => setTicketImage(e.target.value)}
                     required
                 />
@@ -134,13 +142,12 @@ export default function TicketMaker() {
             <section >
                 <Snackbar
                     className='snackbarOnError'
-                    message='All fields has to be filled'
+                    message={errorMessage}
                     key={'top' + 'center'}
                     open={snackbar}
                     autoHideDuration={3000}
                     onClose={handleCloseSnackbar}
                 >
-
                 </Snackbar>
             </section>
         </div>
