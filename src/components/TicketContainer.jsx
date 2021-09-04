@@ -1,5 +1,5 @@
 import React, { useContext, useCallback } from 'react'
-import Ticket from './Ticket'
+import TicketCard from './TicketCard'
 import { TicketContext } from '../TicketContext'
 import './TicketContainer.scss'
 
@@ -21,11 +21,10 @@ export default function TicketContainer() {
         
     }, [tickets]);
 
-
     const ticket = tickets.map((item, index) => {
         return (
             <div className='ticket-container' key={index}>
-                <Ticket ticket={item} ticketId={item.id} index={index} moveTicket={moveTicket} />
+                <TicketCard ticket={item} ticketId={item.id} index={index} moveTicket={moveTicket} />
             </div>
         )
     })

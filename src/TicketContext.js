@@ -55,20 +55,17 @@ export default class TicketContextProvider extends Component {
         localStorage.setItem('tickets', JSON.stringify(newState))
     }
 
-    changeOrder=(newArray)=>{
-
-        console.log(newArray);
+    changeOrder = (newArray) => {
         this.setState({
             tickets: newArray
         })
-
     }
 
     valueObj = {
         addItem: this.addItem,
         deleteItem: this.deleteItem,
         updateItem: this.updateItem,
-        changeOrder:this.changeOrder
+        changeOrder: this.changeOrder
     }
 
     render() {

@@ -1,27 +1,24 @@
-import React, { useContext, useState, useRef } from 'react'
+import React, { useContext, useState } from 'react'
+import { FormControl, Button, Input, Snackbar, InputLabel, TextField } from '@material-ui/core/';
 import { TicketContext } from '../TicketContext'
-import { makeStyles } from '@material-ui/core/styles';
-import { Card, FormControl, CardActions, CardContent, CardMedia, Button, Input, Snackbar, InputLabel } from '@material-ui/core/';
-import { useDrag, useDrop } from 'react-dnd';
+import './Ticket.scss'
+import Uuid from 'react-uuid';
 
 
-const useStyles = makeStyles({
-    root: {
-        width: 300,
-        backgroundColor: '#f4f4f4',
-        maxHeight: 600,
-        overflow: 'scroll',
-        marginBottom: 50,
-    },
+export default function Ticket(props) {
 
-})
-
-export default function Ticket({ ticket, ticketId, moveTicket, index }) {
     const context = useContext(TicketContext)
 
-    const classes = useStyles();
-
-    const { id, name, image, startOfSales, totalAvailable, price, endOfSales, text } = ticket
+    const {
+        id,
+        name,
+        image,
+        startOfSales,
+        totalAvailable,
+        price,
+        endOfSales,
+        text,
+    } = props.ticket
 
     const [ticketName, setTicketName] = useState(name)
     const [ticketText, setTicketText] = useState(text)
@@ -30,76 +27,58 @@ export default function Ticket({ ticket, ticketId, moveTicket, index }) {
     const [ticketEndOfSales, setTicketEndOfSales] = useState(endOfSales)
     const [ticketAvailable, setTicketAvailable] = useState(totalAvailable)
     const [ticketImage, setTicketImage] = useState(image)
-
-    const [edit, setEdit] = useState(true)
     const [snackbar, setSnackbar] = useState(false)
 
-    ///drag
-    const [{ isDragging }, drag] = useDrag({
-        type: 'ticket',
-        item: () => {
-            return { ticketId, index };
-        },
-        collect: (monitor) => ({
-            isDragging: monitor.isDragging(),
-        }),
-    });
 
+    const [edit, setEdit] = useState(props.ticketMakeMode ? false : true)
+    const [errorMessage, setErrorMessage] = useState()
 
-    ///drop
-    const ref = useRef(null);
+    const handleAddTicket = () => {
 
-    const [{ handlerId }, drop] = useDrop({
-        accept: 'ticket',
-        collect(monitor) {
-            return {
-                handlerId: monitor.getHandlerId(),
-            };
-        },
-        hover(item, monitor) {
-            if (!ref.current) {
-                return;
-            }
-            const dragIndex = item.index;
-            const hoverIndex = index;
-            // Don't replace items with themselves
-            if (dragIndex === hoverIndex) {
-                return;
-            }
-            // Determine rectangle on screen
-            const hoverBoundingRect = ref.current?.getBoundingClientRect();
-            // Get vertical middle
-            const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-            // Determine mouse position
-            const clientOffset = monitor.getClientOffset();
-            // Get pixels to the top
-            const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-        
-            if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-                return;
-            }
-            moveTicket(dragIndex, hoverIndex);
-
-            item.index = hoverIndex;
-        },
-    });
-
-    drag(drop(ref));
-
-    const handleCloseSnackbar = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setSnackbar(false);
-    };
-
-
-    const handleSave = () => {
-        if (ticketName.length === 0 || ticketText.length === 0) {
+        if (ticketName.length === 0 || ticketText.length === 0 || ticketPrice.length === 0 || ticketStartOfSales.length === 0 || ticketEndOfSales.length === 0 || ticketAvailable.length === 0) {
             setSnackbar(true)
+            setErrorMessage('No filed should be empty')
+
             return
         }
+
+        if ((Date.parse(ticketEndOfSales) <= Date.parse(ticketStartOfSales))) {
+            setSnackbar(true)
+            setErrorMessage('Start date has to be earlier than End date')
+
+            return
+        }
+
+
+        const ticketObj = {
+            id: Uuid(),
+            name: ticketName,
+            text: ticketText,
+            price: ticketPrice,
+            totalAvailable: ticketAvailable,
+            startOfSales: ticketStartOfSales,
+            endOfSales: ticketEndOfSales,
+            image: ticketImage
+        }
+
+        context.addItem(ticketObj)
+    }
+    const handleSave = () => {
+
+        if (ticketName.length === 0 || ticketText.length === 0 || ticketPrice.length === 0 || ticketStartOfSales.length === 0 || ticketEndOfSales.length === 0 || ticketAvailable.length === 0) {
+            setSnackbar(true)
+            setErrorMessage('No filed should be empty')
+
+            return
+        }
+
+        if ((Date.parse(ticketEndOfSales) <= Date.parse(ticketStartOfSales))) {
+            setSnackbar(true)
+            setErrorMessage('Start date has to be earlier than End date')
+
+            return
+        }
+
         const ticketObj = {
             id: id,
             name: ticketName,
@@ -119,111 +98,135 @@ export default function Ticket({ ticket, ticketId, moveTicket, index }) {
         context.deleteItem(id)
     }
 
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setSnackbar(false);
+    };
+
+
     return (
-        <div >
-            <Card className={classes.root} ref={ref} style={{ boxShadow: isDragging ? '1px 5px 5px steelblue' : '0 0' }}>
+        <>
+            <FormControl fullWidth='true' margin='normal' >
+                <InputLabel htmlFor="component-simple" required>Name</InputLabel>
+                <Input
+                    id="component-simple"
+                    value={ticketName}
+                    disabled={edit}
+                    onChange={e => setTicketName(e.target.value)}
 
-                <CardMedia
-                    component="img"
-                    alt="Contemplative Reptile"
-                    height="140"
-                    image={image}
-                    title={ticketName}
                 />
-                <CardContent>
-                    <FormControl fullWidth='true' margin='normal' >
-                        <InputLabel htmlFor="component-simple" required>Name</InputLabel>
-                        <Input
-                            id="component-simple"
-                            value={ticketName}
-                            readOnly={edit}
-                            onChange={e => setTicketName(e.target.value)}
+            </FormControl>
 
-                        />
-                    </FormControl>
+            <FormControl fullWidth='true' margin='normal'>
+                <InputLabel htmlFor="component-simple" required>Desc</InputLabel>
+                <Input
+                    id="component-simple"
+                    value={ticketText}
+                    disabled={edit}
+                    multiline
+                    onChange={e => setTicketText(e.target.value)}
+                />
+            </FormControl>
 
-                    <FormControl fullWidth='true' margin='normal'>
-                        <InputLabel htmlFor="component-simple">Desc</InputLabel>
-                        <Input
-                            id="component-simple"
-                            value={ticketText}
-                            readOnly={edit}
-                            multiline
-                            onChange={e => setTicketText(e.target.value)}
-                            required
-                        />
-                    </FormControl>
+            <FormControl fullWidth='true' margin='normal'>
+                <InputLabel htmlFor="component-simple" required>Price</InputLabel>
+                <Input
+                    id="component-simple"
+                    value={ticketPrice}
+                    disabled={edit}
+                    onChange={e => setTicketPrice(e.target.value)}
+                    type="number"
+                />
+            </FormControl>
+            <FormControl fullWidth='true' margin='normal'>
+                <TextField
+                    id="date"
+                    label="Start of sales"
+                    type="date"
+                    onChange={e => setTicketStartOfSales(e.target.value)}
+                    disabled={edit}
+                    value={ticketStartOfSales}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    required
+                />
+            </FormControl>
 
-                    <FormControl fullWidth='true' margin='normal'>
-                        <InputLabel htmlFor="component-simple">Price</InputLabel>
-                        <Input
-                            id="component-simple"
-                            value={ticketPrice}
-                            readOnly={edit}
-                            onChange={e => setTicketPrice(e.target.value)}
-                            required
-                        />
-                    </FormControl>
+            <FormControl fullWidth='true' margin='normal'>
+                <TextField
+                    id="date"
+                    label="End of sales"
+                    type="date"
+                    onChange={e => setTicketEndOfSales(e.target.value)}
+                    disabled={edit}
+                    value={ticketEndOfSales}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    required
+                />
+            </FormControl>
 
-                    <FormControl fullWidth='true' margin='normal'>
-                        <InputLabel htmlFor="component-simple">Start of sales</InputLabel>
-                        <Input
-                            id="component-simple"
-                            value={ticketStartOfSales}
-                            readOnly={edit}
-                            onChange={e => setTicketStartOfSales(e.target.value)}
-                            required
-                            type="date"
+            <FormControl fullWidth='true' margin='normal'>
+                <InputLabel htmlFor="component-simple" required>Available tickets</InputLabel>
+                <Input
+                    id="component-simple"
+                    value={ticketAvailable}
+                    disabled={edit}
+                    onChange={e => setTicketAvailable(e.target.value)}
+                    type="number"
 
-                        />
-                    </FormControl>
+                />
+            </FormControl>
 
-                    <FormControl fullWidth='true' margin='normal'>
-                        <InputLabel htmlFor="component-simple">End of sales</InputLabel>
-                        <Input
-                            id="component-simple"
-                            value={ticketEndOfSales}
-                            readOnly={edit}
-                            onChange={e => setTicketEndOfSales(e.target.value)}
-                            required
-                            type="date"
+            {
+                props.isImage && <FormControl fullWidth='true' margin='normal'>
+                    <InputLabel htmlFor="component-simple">URL</InputLabel>
+                    <Input
+                        onChange={e => setTicketImage(e.target.value)}
+                        required
+                    />
+                </FormControl>
+            }
 
-                        />
-                    </FormControl>
+            <div className='ticket-btn'>
 
-                    <FormControl fullWidth='true' margin='normal'>
-                        <InputLabel htmlFor="component-simple">Available tickets</InputLabel>
-                        <Input
-                            id="component-simple"
-                            value={ticketAvailable}
-                            readOnly={edit}
-                            onChange={e => setTicketAvailable(e.target.value)}
-                            required
-                        />
-                    </FormControl>
-                </CardContent>
+                {props.isDelete &&
+                    <section>
+                        <Button size="small" color="secondary" onClick={handleDelete}>
+                            Delete
+                        </Button>
+                    </section>}
 
-                <CardActions>
-                    <Button size="small" color="secondary" onClick={handleDelete}>
-                        Delete
-                    </Button>
-                    {
-                        edit ?
-                            <Button size="small" color="primary" onClick={() => setEdit(false)}>
-                                Edit
-                            </Button>
-                            :
-                            <Button size="small" color="primary" onClick={handleSave}>
-                                Save
-                            </Button>
-                    }
-                </CardActions>
-            </Card>
+                {props.isSave &&
+                    <section>
+                        {
+                            edit ?
+                                <Button size="small" color="primary" onClick={() => setEdit(false)}>
+                                    Edit
+                                </Button>
+                                :
+                                <Button size="small" color="primary" onClick={handleSave}>
+                                    Save
+                                </Button>
+                        }
+                    </section>}
+                {props.isAdd &&
+                    <section>
+                        <Button size="small" color="primary" onClick={handleAddTicket}>
+                            Add Ticket
+                        </Button>
+                    </section>}
 
+            </div>
             <section >
                 <Snackbar
                     className='snackbarOnError'
-                    message='This field is required '
+                    message={errorMessage}
                     key={'top' + 'center'}
                     open={snackbar}
                     autoHideDuration={3000}
@@ -232,6 +235,6 @@ export default function Ticket({ ticket, ticketId, moveTicket, index }) {
 
                 </Snackbar>
             </section>
-        </div>
+        </>
     )
 }
