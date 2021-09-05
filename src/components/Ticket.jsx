@@ -130,7 +130,6 @@ export default function Ticket(props) {
         setSnackbar(false);
     };
 
-
     return (
         <>
             <FormControl fullWidth='true' margin='normal' >

@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import { TicketContext } from '../TicketContext'
-
 import './Navbar.scss'
 import { NavLink } from 'react-router-dom'
 import { Button, IconButton, Badge } from '@material-ui/core';

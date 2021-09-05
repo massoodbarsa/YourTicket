@@ -3,7 +3,6 @@ import TicketCard from './TicketCard'
 import { TicketContext } from '../TicketContext'
 import './TicketContainer.scss'
 
-
 export default function TicketContainer() {
 
     const context = useContext(TicketContext)

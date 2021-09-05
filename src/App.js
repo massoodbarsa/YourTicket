@@ -6,8 +6,6 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import Cart from './pages/Cart';
 
 
-
-
 function App() {
   return (
     <div className="App">

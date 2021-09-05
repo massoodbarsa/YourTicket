@@ -17,7 +17,6 @@ const useStyles = makeStyles({
         marginBottom: 50,
         cursor: 'grab'
     },
-
 })
 
 export default function TicketCard({ ticket, ticketId, moveTicket, index }) {
@@ -101,7 +100,6 @@ export default function TicketCard({ ticket, ticketId, moveTicket, index }) {
         setSnackbar(false);
     };
 
-
     return (
         <>
             <Card className={classes.root} ref={ref} style={{ boxShadow: isDragging ? '1px 5px 5px steelblue' : '0 0' }}>
@@ -129,7 +127,6 @@ export default function TicketCard({ ticket, ticketId, moveTicket, index }) {
                     autoHideDuration={3000}
                     onClose={handleCloseSnackbar}
                 >
-
                 </Snackbar>
             </section>
         </>

@@ -1,6 +1,5 @@
 import React from 'react'
 import './TicketMaker.scss'
-
 import Ticket from './Ticket';
 
 export default function TicketMaker() {
