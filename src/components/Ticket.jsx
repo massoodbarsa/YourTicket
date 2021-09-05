@@ -60,6 +60,12 @@ export default function Ticket(props) {
             return
         }
 
+        if (ticketAvailable < 0 || ticketPrice < 0) {
+            setSnackbar(true)
+            setErrorMessage('Available tickets or Price should be a positivie number')
+            return
+        }
+
 
         const ticketObj = {
             id: Uuid(),
@@ -89,6 +95,13 @@ export default function Ticket(props) {
 
             return
         }
+
+        if (ticketAvailable < 0 || ticketPrice < 0) {
+            setSnackbar(true)
+            setErrorMessage('Available tickets or Price should be a positivie number')
+            return
+        }
+
 
         const ticketObj = {
             id: id,
@@ -225,13 +238,16 @@ export default function Ticket(props) {
                                     Save
                                 </Button>
                         }
-                    </section>}
+                    </section>
+                }
+
                 {props.isAdd &&
                     <section>
                         <Button size="small" color="primary" onClick={handleAddTicket}>
                             Add Ticket
                         </Button>
-                    </section>}
+                    </section>
+                }
 
             </div>
             <section >

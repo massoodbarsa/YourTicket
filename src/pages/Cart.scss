@@ -1,0 +1,56 @@
+.shop-container {
+    padding: 2rem 10rem;
+
+    h3 {
+        margin: 100px auto;
+        background-color: #373d45;
+        padding: 1rem;
+        color: #fff;
+        font-family: 'Times New Roman', Times, serif;
+        letter-spacing: 1.9px;
+        line-height: 30px;
+        border-radius: 5px;
+    }
+
+    &__items {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        align-items: center;
+        border-bottom: 1px solid #d8dbdf;
+        padding: 1rem;
+        grid-gap: 5rem;
+        width: 80%;
+
+        img {
+            width: 100px;
+        }
+
+        &__desc {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            p {
+                margin-left: 200px;
+            }
+        }
+
+        &__price {
+            display: flex;
+            justify-items: flex-end;
+            position: relative;
+        }
+
+        &__trash{
+            display: flex;
+            justify-items: flex-end;
+            position: relative;
+            color: rgb(224, 54, 68);
+            width: 10px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+    }
+}
+

@@ -1,6 +1,6 @@
 import React from 'react'
-import TicketContainer from './TicketContainer'
-import TicketMaker from './TicketMaker'
+import TicketContainer from '../components/TicketContainer'
+import TicketMaker from '../components/TicketMaker'
 import './Main.scss'
 
 import { DndProvider } from 'react-dnd'

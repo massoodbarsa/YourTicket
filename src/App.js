@@ -1,15 +1,25 @@
 import './App.scss';
-import Main from './components/Main';
-import  TicketContextProvider  from './TicketContext';
+import Navbar from './components/Navbar';
+import Main from './pages/Main';
+import TicketContextProvider from './TicketContext';
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import Cart from './pages/Cart';
+
 
 
 
 function App() {
   return (
     <div className="App">
-      <TicketContextProvider>
-        <Main />
-      </TicketContextProvider>
+      <BrowserRouter>
+        <TicketContextProvider>
+          <Navbar />
+          <Switch>
+            <Route path="/" exact> <Main /></Route>
+            <Route path="/Cart"> <Cart /> </Route>
+          </Switch>
+        </TicketContextProvider>
+      </BrowserRouter>
     </div>
   );
 }

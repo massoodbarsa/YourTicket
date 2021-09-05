@@ -6,7 +6,8 @@ export const TicketContext = createContext()
 export default class TicketContextProvider extends Component {
 
     state = {
-        tickets: []
+        tickets: [],
+        shoppingCart: []
     }
 
     componentWillMount() {
@@ -59,16 +60,30 @@ export default class TicketContextProvider extends Component {
         this.setState({
             tickets: newArray
         })
+    }
 
-        // localStorage.removeItem('tickets')
-        // localStorage.setItem('tickets', JSON.stringify(newArray))
+    addToShoppingCart = (item) => {
+        
+        this.setState({
+            shoppingCart: [...this.state.shoppingCart, item]
+        })
+    }
+
+    deleteFromShoppingCart = (id) => {
+        const shoppingCart = this.state.shoppingCart.filter(item => item.id !== id)
+
+        this.setState({
+            shoppingCart
+        })
     }
 
     valueObj = {
         addItem: this.addItem,
         deleteItem: this.deleteItem,
         updateItem: this.updateItem,
-        changeOrder: this.changeOrder
+        changeOrder: this.changeOrder,
+        addToShoppingCart: this.addToShoppingCart,
+        deleteFromShoppingCart: this.deleteFromShoppingCart
     }
 
     render() {

@@ -10,9 +10,6 @@ export default function TicketContainer() {
 
     const { tickets } = useContext(TicketContext)
 
-    console.log('container');
-    console.log(tickets);
-
     const moveTicket = useCallback((dragIndex, hoverIndex) => {
         const dragCard = tickets[dragIndex];
         const hoverCard = tickets[hoverIndex];
