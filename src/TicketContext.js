@@ -20,12 +20,10 @@ export default class TicketContextProvider extends Component {
 
     deleteItem = (id) => {
 
-        console.log(id);
         const filterdArray = this.state.tickets.filter(item => item.id !== id)
         this.setState({
             tickets: filterdArray
         })
-        console.log(filterdArray);
         localStorage.removeItem('tickets')
         localStorage.setItem('tickets', JSON.stringify(filterdArray))
     }
@@ -56,9 +54,14 @@ export default class TicketContextProvider extends Component {
     }
 
     changeOrder = (newArray) => {
+
+        console.log(newArray);
         this.setState({
             tickets: newArray
         })
+
+        // localStorage.removeItem('tickets')
+        // localStorage.setItem('tickets', JSON.stringify(newArray))
     }
 
     valueObj = {

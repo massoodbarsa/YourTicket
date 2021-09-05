@@ -6,19 +6,22 @@ import './TicketContainer.scss'
 
 export default function TicketContainer() {
 
-    const context= useContext(TicketContext)
+    const context = useContext(TicketContext)
 
     const { tickets } = useContext(TicketContext)
+
+    console.log('container');
+    console.log(tickets);
 
     const moveTicket = useCallback((dragIndex, hoverIndex) => {
         const dragCard = tickets[dragIndex];
         const hoverCard = tickets[hoverIndex];
 
-        tickets[dragIndex]=hoverCard
-        tickets[hoverIndex]=dragCard
+        tickets[dragIndex] = hoverCard
+        tickets[hoverIndex] = dragCard
 
         context.changeOrder(tickets)
-        
+
     }, [tickets]);
 
     const ticket = tickets.map((item, index) => {

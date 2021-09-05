@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { FormControl, Button, Input, Snackbar, InputLabel, TextField } from '@material-ui/core/';
 import { TicketContext } from '../TicketContext'
 import './Ticket.scss'
@@ -20,18 +20,29 @@ export default function Ticket(props) {
         text,
     } = props.ticket
 
-    const [ticketName, setTicketName] = useState(name)
-    const [ticketText, setTicketText] = useState(text)
-    const [ticketPrice, setTicketPrice] = useState(price)
-    const [ticketStartOfSales, setTicketStartOfSales] = useState(startOfSales)
-    const [ticketEndOfSales, setTicketEndOfSales] = useState(endOfSales)
-    const [ticketAvailable, setTicketAvailable] = useState(totalAvailable)
+    const [ticketName, setTicketName] = useState('')
+    const [ticketText, setTicketText] = useState('')
+    const [ticketPrice, setTicketPrice] = useState('')
+    const [ticketStartOfSales, setTicketStartOfSales] = useState('')
+    const [ticketEndOfSales, setTicketEndOfSales] = useState('')
+    const [ticketAvailable, setTicketAvailable] = useState('')
     const [ticketImage, setTicketImage] = useState(image)
+
     const [snackbar, setSnackbar] = useState(false)
-
-
     const [edit, setEdit] = useState(props.ticketMakeMode ? false : true)
     const [errorMessage, setErrorMessage] = useState()
+
+
+    useEffect(() => {
+
+        setTicketName(name)
+        setTicketText(text)
+        setTicketPrice(price)
+        setTicketStartOfSales(startOfSales)
+        setTicketEndOfSales(endOfSales)
+        setTicketAvailable(totalAvailable)
+
+    }, [props.ticket])
 
     const handleAddTicket = () => {
 
@@ -87,7 +98,7 @@ export default function Ticket(props) {
             totalAvailable: ticketAvailable,
             startOfSales: ticketStartOfSales,
             endOfSales: ticketEndOfSales,
-            image: ticketImage,
+            image: image,
         }
         // console.log(ticketObj);
         context.updateItem(ticketObj)

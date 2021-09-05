@@ -1,6 +1,7 @@
-import React, {  useRef } from 'react'
+import React, { useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import { Card, CardContent, CardMedia, } from '@material-ui/core/';
+
 import { useDrag, useDrop } from 'react-dnd';
 import Ticket from './Ticket';
 
@@ -17,6 +18,9 @@ const useStyles = makeStyles({
 })
 
 export default function TicketCard({ ticket, ticketId, moveTicket, index }) {
+
+    // console.log('card');
+    // console.log(ticket);
 
     const classes = useStyles();
 
