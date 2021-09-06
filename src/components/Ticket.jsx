@@ -208,7 +208,7 @@ export default function Ticket(props) {
 
             {
                 props.isImage && <FormControl fullWidth='true' margin='normal'>
-                    <InputLabel htmlFor="component-simple">URL</InputLabel>
+                    <InputLabel htmlFor="component-simple">Image URL</InputLabel>
                     <Input
                         onChange={e => setTicketImage(e.target.value)}
                         required
